@@ -13,7 +13,10 @@ public class OrderController {
 
 	@RequestMapping("/save")
 	public String save(@RequestParam("msg") String msg) {
-		publisher.placeOrder(msg);
+		Order order = new Order();
+		order.setOrderId(2);
+		order.setOrderName("Earrings");
+		publisher.placeOrder(msg, order);
 		return "Order Placed";
 	}
 }
