@@ -14,9 +14,18 @@ public class OrderService {
 	@Autowired
 	private FanoutExchange fanoutExchange;
 
+	@Autowired
+	private OrderDAO orderDAO;
+	
 	public void placeOrder(String msg, Order order) {
-		rabbitTemplate.convertAndSend(fanoutExchange.getName(), "", order);
-		System.out.println("Place an order = " + msg);
 		System.out.println("Order Details" + order);
+		
+		// 1. Save the order in the db
+		orderDAO.save(order);
+		
+		// 2. Send the notification message
+		rabbitTemplate.convertAndSend(fanoutExchange.getName(), "", order);
+		
+		System.out.println("Place an order = " + msg);
 	}
 }
